@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
-
+import os
 # This will ignore the LangChain deprecation warnings
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
