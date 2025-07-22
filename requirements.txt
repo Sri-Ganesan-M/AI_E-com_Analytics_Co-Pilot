@@ -69,7 +69,6 @@ sniffio==1.3.1
 SQLAlchemy==2.0.41
 sqlparse==0.5.3
 sse-starlette==2.4.1
-starlette @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_starlette_1751323809/work
 tenacity==9.1.2
 typing-inspect==0.9.0
 typing-inspection==0.4.1

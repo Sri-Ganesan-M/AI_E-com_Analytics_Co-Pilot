@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import  { useState, useRef } from 'react';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import type { InitialPayload, HistoryItem } from './types';
 import ConversationHistory from './components/ConversationHistory';

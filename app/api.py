@@ -18,11 +18,23 @@ from app.agent_chain import create_sql_chain, create_correction_chain, create_ro
 
 app = FastAPI()
 
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+
+render_preview_pattern = r"https://your-frontend-name-.*\.onrender\.com"
+
+origins = [
+    frontend_url,
+    "http://localhost:5173", # For local development
+]
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
+    allow_origin_regex=render_preview_pattern, # Allow Render's PR preview URLs
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"], # Explicitly allow OPTIONS
     allow_headers=["*"],
 )
 
