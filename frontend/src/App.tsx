@@ -1,77 +1,79 @@
-// src/App.tsx
 import { useState } from 'react';
-import CommandLog from './components/CommandLog';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
+import type { InitialPayload, HistoryItem } from './types';
+import ConversationHistory from './components/ConversationHistory';
 import DashboardCanvas from './components/DashboardCanvas';
-import type { HistoryItem, DashboardData } from './types';
 
 const API_URL = "http://127.0.0.1:8000";
+type Status = 'idle' | 'loading' | 'error' | 'success';
 
 export default function App() {
+  const [status, setStatus] = useState<Status>('idle');
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [currentDashboard, setCurrentDashboard] = useState<DashboardData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
 
   const handleAskQuestion = async (question: string) => {
-    if (!question || isLoading) return;
+    setStatus('loading');
+    const newId = `conv_${Date.now()}`;
+    setSelectedConversationId(newId);
 
-    setIsLoading(true);
-    setError(null);
-    setCurrentDashboard({ question } as DashboardData);
+    // Temporary history item while loading
+    const tempHistoryItem: HistoryItem = {
+      id: newId,
+      question,
+      payload: { generated_sql: '', result: [], chart_data: null },
+      explanation: ''
+    };
+    setHistory(prev => [tempHistoryItem, ...prev]);
 
-    try {
-      const response = await fetch(`${API_URL}/ask`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question }),
-      });
+    let finalPayload: InitialPayload | null = null;
+    let finalExplanation = '';
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data: DashboardData = await response.json();
-
-      if (data.error) {
-        setError(data.error);
-        setCurrentDashboard(null);
-      } else {
-        const newHistoryItem: HistoryItem = { question, response: data };
-        setCurrentDashboard(data);
-        if (!history.find(h => h.question === question)) {
-            setHistory(prev => [newHistoryItem, ...prev]);
+    await fetchEventSource(`${API_URL}/ask-stream`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question }),
+      onmessage(ev) {
+        if (ev.event === 'initial_data') {
+          finalPayload = JSON.parse(ev.data);
+          // Update the temporary item with initial data
+          setHistory(prev => prev.map(item => item.id === newId ? { ...item, payload: finalPayload! } : item));
+        } else if (ev.event === 'text_chunk') {
+          finalExplanation += ev.data;
+          // Update the explanation live
+          setHistory(prev => prev.map(item => item.id === newId ? { ...item, explanation: finalExplanation } : item));
         }
+      },
+      onerror(err) {
+        setHistory(prev => prev.map(item => item.id === newId ? { ...item, explanation: "An error occurred." } : item));
+        setStatus('error');
+        throw err;
+      },
+      onclose() {
+        // Finalize the history item
+        if (finalPayload) {
+          const finalHistoryItem: HistoryItem = { id: newId, question, payload: finalPayload, explanation: finalExplanation };
+          setHistory(prev => prev.map(item => item.id === newId ? finalHistoryItem : item));
+        }
+        setStatus('success');
       }
-    } catch (e) {
-      const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
-      console.error("Failed to fetch from API:", errorMessage);
-      setError("Failed to connect to the backend. Please ensure it's running.");
-      setCurrentDashboard(null);
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
-  const handleRerunCommand = (historyItem: HistoryItem) => {
-    if (isLoading) return;
-    setError(null);
-    setCurrentDashboard(historyItem.response);
-  };
+  const selectedConversation = history.find(item => item.id === selectedConversationId) || null;
 
   return (
-    // Use Bootstrap's flex utilities for the main layout
-    <main className="d-flex flex-column flex-md-row vh-100 bg-light">
-      <CommandLog
+    <main className="d-flex flex-row vh-100 bg-dark text-light">
+      <ConversationHistory
         history={history}
+        selectedId={selectedConversationId}
+        onSelect={setSelectedConversationId}
         onAsk={handleAskQuestion}
-        onRerun={handleRerunCommand}
-        isLoading={isLoading}
+        isLoading={status === 'loading'}
       />
       <DashboardCanvas
-        data={currentDashboard}
-        isLoading={isLoading}
-        error={error}
-        apiUrl={API_URL}
+        status={status}
+        conversation={selectedConversation}
       />
     </main>
   );
