@@ -1,4 +1,3 @@
-// components/CommandBar.tsx
 import React, { useState } from 'react';
 import { Send, Sparkles } from 'lucide-react';
 

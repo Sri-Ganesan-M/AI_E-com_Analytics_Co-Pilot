@@ -13,27 +13,26 @@ def prepare_chart_data(result: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]
     if len(headers) != 2:
         return None
 
-    # --- More flexible logic to identify label and value columns ---
     col1_val, col2_val = result[0][headers[0]], result[0][headers[1]]
     label_header, value_header = None, None
 
-    # Case 1: First column is label (str/int), second is value (num)
+
     if isinstance(col1_val, (str, int)) and isinstance(col2_val, (int, float)):
         label_header, value_header = headers[0], headers[1]
-    # Case 2: Second column is label (str/int), first is value (num)
+
     elif isinstance(col2_val, (str, int)) and isinstance(col1_val, (int, float)):
         label_header, value_header = headers[1], headers[0]
     else:
-        # If neither combination matches, the data is not suitable for a chart
+
         return None
 
-    # Convert all labels to strings for the chart, and get numerical values
+
     labels = [str(row[label_header]) for row in result]
     data_values = [row[value_header] for row in result]
     dataset_label = value_header.replace('_', ' ').title()
     
     # --- Pie Chart Logic ---
-    # Use a pie chart for distributions with a small number of categories (2-8)
+
     if 2 <= len(labels) <= 8:
         pie_colors = [
             '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e',

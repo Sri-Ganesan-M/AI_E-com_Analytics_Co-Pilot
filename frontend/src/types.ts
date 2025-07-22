@@ -1,4 +1,3 @@
-// src/types.ts
 import type { ChartData } from 'chart.js';
 
 interface LineChart { type: 'line'; data: ChartData<'line'>; }

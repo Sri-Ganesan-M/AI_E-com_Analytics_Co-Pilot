@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState } from 'react';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import type { InitialPayload, HistoryItem } from './types';
@@ -6,7 +5,7 @@ import ConversationHistory from './components/ConversationHistory';
 import DashboardCanvas from './components/DashboardCanvas';
 import NavBar from './components/NavBar';
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 export default function App() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
