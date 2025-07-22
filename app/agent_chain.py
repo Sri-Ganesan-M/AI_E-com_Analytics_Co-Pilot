@@ -7,7 +7,7 @@ import os
 
 def create_sql_chain() -> LLMChain:
     """
-    Loads the prompt template and creates the SQL generation chain.
+    Loads the prompt template for SQL generation and creates the chain.
     """
     db = get_sql_database()
     llm = get_llm()
@@ -20,12 +20,38 @@ def create_sql_chain() -> LLMChain:
     except FileNotFoundError:
         raise RuntimeError("FATAL ERROR: prompt_template.txt not found.")
 
+    # Updated prompt to include chat_history
     prompt = PromptTemplate(
-        input_variables=["input", "table_info"],
+        input_variables=["input", "chat_history", "table_info"],
         template=template.replace("{table_info}", db.get_table_info()),
     )
 
     return LLMChain(llm=llm, prompt=prompt, verbose=True)
+
+def create_correction_chain() -> LLMChain:
+    """
+    Creates a chain that attempts to correct a faulty SQL query given an error message.
+    """
+    llm = get_llm()
+    correction_template = """
+    The user asked the following question: "{question}"
+    We tried to answer it with this SQL query:
+    ```sql
+    {faulty_sql}
+    ```
+    But the query failed with this error: "{error_message}"
+
+    Your task is to fix the SQL query. Do not apologize or explain.
+    Just return a new, corrected SQL query in a single ```sql code block.
+
+    Corrected SQL Query:
+    """
+    prompt = PromptTemplate(
+        input_variables=["question", "faulty_sql", "error_message"],
+        template=correction_template,
+    )
+    return LLMChain(llm=llm, prompt=prompt, verbose=True)
+
 
 def clean_generated_sql(raw_sql: str) -> str:
     """
