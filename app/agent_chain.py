@@ -51,6 +51,30 @@ def create_correction_chain() -> LLMChain:
     return LLMChain(llm=llm, prompt=prompt, verbose=True)
 
 
+# Add this function to agent_chain.py
+
+def create_router_chain() -> LLMChain:
+    """
+    Loads the router prompt and creates the classification chain.
+    """
+    llm = get_llm()
+
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        prompt_file_path = os.path.join(current_dir, "router_prompt_template.txt")
+        with open(prompt_file_path, "r") as f:
+            template = f.read()
+    except FileNotFoundError:
+        raise RuntimeError("FATAL ERROR: router_prompt_template.txt not found.")
+
+    prompt = PromptTemplate(
+        input_variables=["input"],
+        template=template,
+    )
+
+    return LLMChain(llm=llm, prompt=prompt, verbose=True)
+
+
 def clean_generated_sql(raw_sql: str) -> str:
     """
     More robustly cleans the raw output from the LLM.
