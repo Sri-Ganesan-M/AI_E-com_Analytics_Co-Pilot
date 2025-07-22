@@ -1,6 +1,10 @@
 /* src/index.css */
 body {
-  background-color: #0a0a0a; /* A slightly off-black for depth */
+  /* New radial gradient background for depth */
+  background-color: #111827; /* Fallback */
+  background-image: radial-gradient(circle at top right, rgba(67, 56, 202, 0.4) 0%, #111827 35%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* Custom scrollbar for a modern look */
@@ -8,13 +12,33 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: rgba(17, 24, 39, 0.5);
 }
 ::-webkit-scrollbar-thumb {
   background-color: #4a4a4a;
   border-radius: 10px;
-  border: 2px solid #1a1a1a;
+  border: 2px solid rgba(17, 24, 39, 0.5);
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #6a6a6a;
+}
+
+/* Prompt Starter Button Styles */
+.prompt-starter-btn {
+  background-color: rgba(31, 41, 55, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d1d5db;
+  transition: all 0.2s ease-in-out;
+}
+
+.prompt-starter-btn:hover {
+  background-color: rgba(55, 65, 81, 0.7);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.card {
+    background-color: rgba(17, 24, 39, 0.6) !important;
+    backdrop-filter: blur(5px);
 }
