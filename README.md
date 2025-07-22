@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://your-deployment-link.com"><img src="https://img.shields.io/badge/Live-Demo-blue?logo=vercel" alt="Live Demo"></a>
+  <a href="https://ai-e-com-analytics-co-pilot.vercel.app"><img src="https://img.shields.io/badge/Live-Demo-blue?logo=vercel" alt="Live Demo"></a>
   <img src="https://img.shields.io/badge/Powered%20By-LangChain-blueviolet" alt="LangChain">
   <img src="https://img.shields.io/badge/LLM-Gemini%20%7C%20Phi3-orange" alt="LLM">
   <img src="https://img.shields.io/badge/Database-SQLite-lightgrey" alt="Database">
@@ -15,7 +15,7 @@
 
 ---
 
-![App Screenshot or GIF Placeholder](https://via.placeholder.com/900x400.png?text=Insert+Demo+GIF+or+Screenshot+Here)
+![App Screenshot or GIF Placeholder](./app.png)
 
 ---
 
@@ -96,6 +96,6 @@ No need for user retries.
 
 ---
 
-## 🛠 Arch Diagram
+## 🛠 Architecture Diagram
 
-![App Screenshot or GIF Placeholder](https://via.placeholder.com/900x400.png?text=Insert+Demo+GIF+or+Screenshot+Here)
+![App Screenshot or GIF Placeholder](./arch.png)
