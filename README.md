@@ -10,7 +10,6 @@
   <img src="https://img.shields.io/badge/Powered%20By-LangChain-blueviolet" alt="LangChain">
   <img src="https://img.shields.io/badge/LLM-Gemini%20%7C%20Phi3-orange" alt="LLM">
   <img src="https://img.shields.io/badge/Database-SQLite-lightgrey" alt="Database">
-  <img src="https://img.shields.io/github/license/your-username/your-repo-name" alt="License">
 </p>
 
 ---
