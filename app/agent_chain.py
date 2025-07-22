@@ -10,7 +10,7 @@ from langchain.prompts import PromptTemplate
 import os
 
 # --- 1. Get the Database and LLM objects ---
-db = get_sql_database(db_path='ecommerce.db')
+db = get_sql_database()
 llm = get_llm()
 
 # --- 2. Load the Enhanced Prompt from the text file ---
@@ -63,7 +63,7 @@ def run_secure_query(user_question: str):
         }
 
     try:
-        data = safe_execute_sql(generated_sql, db_path="ecommerce.db")
+        data = safe_execute_sql(generated_sql)
     except Exception as e:
         return {
             "error": f"❌ SQL execution failed: {str(e)}",

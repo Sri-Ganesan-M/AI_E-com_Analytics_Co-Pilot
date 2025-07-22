@@ -1,5 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
+import os
+os.makedirs("data", exist_ok=True)
 
 # === FILE PATHS ===
 ad_csv_path = 'Datasets/Product-Level Ad Sales and Metrics (mapped) - Product-Level Ad Sales and Metrics (mapped).csv'
@@ -7,7 +9,7 @@ sales_csv_path = 'Datasets/Product-Level Total Sales and Metrics (mapped) - Prod
 elig_csv_path = 'Datasets/Product-Level Eligibility Table (mapped) - Product-Level Eligibility Table (mapped).csv'
 
 # === CREATE SQLITE ENGINE ===
-engine = create_engine('sqlite:///ecommerce.db', echo=False)
+engine = create_engine('sqlite:///data/ecommerce.db', echo=False)
 
 # === LOAD & CLEAN DATA ===
 df_ad = pd.read_csv(ad_csv_path)
