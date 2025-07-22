@@ -1,5 +1,5 @@
 import { BrainCircuit } from 'lucide-react';
-import './SplashScreen.css';
+import './splashscreen.css';
 
 export default function SplashScreen() {
   return (
