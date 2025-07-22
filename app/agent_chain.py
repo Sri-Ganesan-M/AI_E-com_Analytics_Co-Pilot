@@ -1,4 +1,3 @@
-# app/agent_chain.py
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from .llm_agent import get_llm
@@ -20,7 +19,6 @@ def create_sql_chain() -> LLMChain:
     except FileNotFoundError:
         raise RuntimeError("FATAL ERROR: prompt_template.txt not found.")
 
-    # Updated prompt to include chat_history
     prompt = PromptTemplate(
         input_variables=["input", "chat_history", "table_info"],
         template=template.replace("{table_info}", db.get_table_info()),

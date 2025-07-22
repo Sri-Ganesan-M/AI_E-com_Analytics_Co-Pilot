@@ -1,4 +1,3 @@
-// src/components/NavBar.tsx
 import { BrainCircuit } from 'lucide-react';
 
 export default function NavBar() {
@@ -14,7 +13,7 @@ export default function NavBar() {
       <div className="container-fluid">
         <a className="navbar-brand d-flex align-items-center gap-2" href="#">
           <BrainCircuit size={28} className="text-primary" />
-          <span className="fw-bold fs-4">AI E-commerce Analyst</span>
+          <span className="fw-bold fs-4"> AI E-com Analytics Co-Pilot</span>
         </a>
       </div>
     </nav>

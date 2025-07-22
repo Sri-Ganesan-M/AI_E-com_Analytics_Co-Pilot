@@ -1,4 +1,3 @@
-// src/components/DataTable.tsx
 import React, { useState, useMemo } from 'react';
 import type { HistoryItem } from '../types';
 import { ArrowUp, ArrowDown } from 'lucide-react';

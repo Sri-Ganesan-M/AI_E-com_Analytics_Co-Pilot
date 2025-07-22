@@ -1,8 +1,13 @@
-# app/llm_agent.py
 from langchain_community.llms import Ollama
 from typing import List, Dict, Any, AsyncGenerator
+from dotenv import load_dotenv
+import os
 
-def get_llm(model_name="phi3", temperature=0):
+load_dotenv() 
+
+llm_model = os.getenv("LLM_MODEL_NAME")
+llm_temp=os.getenv("LLM_TEMPERATURE")
+def get_llm(model_name=llm_model, temperature=llm_temp):
     """Initializes and returns the LangChain LLM object."""
     return Ollama(model=model_name, temperature=temperature)
 
@@ -21,7 +26,7 @@ async def explain_data_stream(result: List[Dict[str, Any]], question: str) -> As
         yield "The query returned no results."
         return
 
-    sample_rows = result[:3]  # Provide a small sample to the LLM
+    sample_rows = result[:3]  
     llm = get_llm()
 
     prompt = f"""
@@ -32,6 +37,5 @@ The data query returned these sample rows:
 Based on this, provide a concise, insightful explanation in plain English.
 Do not repeat the question or the data. Just provide the analysis.
 """
-    # Use the async stream method of the LLM to get chunks of text
     async for chunk in llm.astream(prompt):
         yield chunk

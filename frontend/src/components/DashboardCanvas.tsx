@@ -1,4 +1,3 @@
-// src/components/DashboardCanvas.tsx
 import { Bot, Download } from 'lucide-react';
 import InteractiveChart from './InteractiveChart';
 import DataTable from './DataTable';
@@ -36,7 +35,7 @@ export default function DashboardCanvas({ status, conversation, onAsk }: CanvasP
     return (
       <div className="text-center text-muted d-flex flex-column justify-content-center align-items-center h-100">
         <Bot size={64} className="mx-auto text-primary" />
-        <h1 className="mt-4 display-5 fw-bold text-light">AI Data Analyst</h1>
+        <h1 className="mt-4 display-5 fw-bold text-light">E-com Analytics Co-Pilot</h1>
         <p className="lead text-secondary mb-5">Select a conversation or ask a new question to begin.</p>
         <div className="d-flex flex-wrap justify-content-center gap-3 px-5">
           {promptStarters.map((prompt, index) => (<button key={index} className="btn prompt-starter-btn px-3 py-2" onClick={() => onAsk(prompt)}>{prompt}</button>))}

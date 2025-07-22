@@ -1,4 +1,3 @@
-// src/components/ConversationHistory.tsx
 import React, { useState } from 'react';
 import { Send, Sparkles, MessageSquare } from 'lucide-react';
 import type { HistoryItem } from '../types';
