@@ -1,35 +1,71 @@
 # app/plot_utils.py
-import matplotlib.pyplot as plt
-import os
-from datetime import datetime
+from typing import Dict, Any, List, Optional
 
-os.makedirs("static", exist_ok=True)  # For saving chart files
-
-def generate_plot_if_needed(result: list[dict], question: str) -> str | None:
+def prepare_chart_data(result: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """
+    Prepares data in a Chart.js-compatible format.
+    This version is updated to be more flexible with data types.
+    """
     if not result or len(result) < 2:
         return None
 
-    first_row = result[0]
-    columns = list(first_row.keys())
+    headers = list(result[0].keys())
+    if len(headers) != 2:
+        return None
 
-    # Check for 2-column pattern like [date, value] or [category, value]
-    if len(columns) == 2:
-        x_vals = [row[columns[0]] for row in result]
-        y_vals = [row[columns[1]] for row in result]
+    # --- More flexible logic to identify label and value columns ---
+    col1_val, col2_val = result[0][headers[0]], result[0][headers[1]]
+    label_header, value_header = None, None
 
-        # Plot
-        plt.figure(figsize=(10, 5))
-        plt.plot(x_vals, y_vals, marker="o")
-        plt.title(question)
-        plt.xlabel(columns[0])
-        plt.ylabel(columns[1])
-        plt.xticks(rotation=45)
-        plt.tight_layout()
+    # Case 1: First column is label (str/int), second is value (num)
+    if isinstance(col1_val, (str, int)) and isinstance(col2_val, (int, float)):
+        label_header, value_header = headers[0], headers[1]
+    # Case 2: Second column is label (str/int), first is value (num)
+    elif isinstance(col2_val, (str, int)) and isinstance(col1_val, (int, float)):
+        label_header, value_header = headers[1], headers[0]
+    else:
+        # If neither combination matches, the data is not suitable for a chart
+        return None
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        path = f"static/plot_{timestamp}.png"
-        plt.savefig(path)
-        plt.close()
-        return path
+    # Convert all labels to strings for the chart, and get numerical values
+    labels = [str(row[label_header]) for row in result]
+    data_values = [row[value_header] for row in result]
+    dataset_label = value_header.replace('_', ' ').title()
+    
+    # --- Pie Chart Logic ---
+    # Use a pie chart for distributions with a small number of categories (2-8)
+    if 2 <= len(labels) <= 8:
+        pie_colors = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e',
+            '#e74a3b', '#858796', '#5a5c69', '#f8f9fc'
+        ]
+        return {
+            "type": "pie",
+            "data": {
+                "labels": labels,
+                "datasets": [{
+                    "label": dataset_label,
+                    "data": data_values,
+                    "backgroundColor": pie_colors[:len(labels)],
+                    "hoverOffset": 4
+                }]
+            }
+        }
 
-    return None
+    # --- Line/Bar Chart Logic ---
+    chart_type = 'line' if len(labels) > 15 else 'bar'
+    
+    return {
+        "type": chart_type,
+        "data": {
+            "labels": labels,
+            "datasets": [{
+                "label": dataset_label,
+                "data": data_values,
+                "borderColor": '#4e73df',
+                "backgroundColor": 'rgba(78, 115, 223, 0.2)',
+                "fill": True,
+                "tension": 0.1
+            }]
+        }
+    }
