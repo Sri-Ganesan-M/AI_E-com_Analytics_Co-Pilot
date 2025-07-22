@@ -42,3 +42,19 @@ body {
     background-color: rgba(17, 24, 39, 0.6) !important;
     backdrop-filter: blur(5px);
 }
+
+
+.modal-content {
+  background-color: #1f2937; 
+  color: #d1d5db;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
